@@ -83,15 +83,15 @@ def classify_metrics(model, test_txt_path, window_size=8):
     with open(test_txt_path, 'r') as f:
         image_paths = [line.strip() for line in f if line.strip()]
 
-    y_true_all = []
-    y_pred_all = []
+    y_true = []
+    y_pred = []
 
     for i in range(0, len(image_paths) - window_size + 1):
 
         window_paths = image_paths[i:i + window_size]
 
-        true_classes_window = []
-        pred_classes_window = []
+        true_cls = []
+        pred_cls = []
 
         for img_path in window_paths:
             if not os.path.exists(img_path):
@@ -99,7 +99,7 @@ def classify_metrics(model, test_txt_path, window_size=8):
 
             results = model(img_path)[0]
             preds = results.boxes.cls.cpu().numpy().astype(int) if results.boxes.cls is not None else []
-            pred_classes_window.extend(preds)
+            pred_cls.extend(preds)
 
             label_path = img_path.replace("images", "labels")
             label_path = os.path.splitext(label_path)[0] + ".txt"
@@ -108,22 +108,20 @@ def classify_metrics(model, test_txt_path, window_size=8):
                     for line in f:
                         parts = line.strip().split()
                         if len(parts) >= 1:
-                            true_classes_window.append(int(parts[0]))
+                            true_cls.append(int(parts[0]))
 
-        if len(true_classes_window) < window_size or len(pred_classes_window) < window_size:
-            continue
 
-        gt_mode = Counter(true_classes_window).most_common(1)[0][0]
-        pred_mode = Counter(pred_classes_window).most_common(1)[0][0]
+        gt_mode = Counter(true_cls).most_common(1)[0][0]
+        pred_mode = Counter(pred_cls).most_common(1)[0][0]
 
         if gt_mode is not None and pred_mode is not None:
-            y_true_all.append(gt_mode)
-            y_pred_all.append(pred_mode)
+            y_true.append(gt_mode)
+            y_pred.append(pred_mode)
 
-    acc = accuracy_score(y_true_all, y_pred_all)
-    prec = precision_score(y_true_all, y_pred_all, average='macro', zero_division=0)
-    rec = recall_score(y_true_all, y_pred_all, average='macro', zero_division=0)
-    f1 = f1_score(y_true_all, y_pred_all, average='macro', zero_division=0)
+    acc = accuracy_score(y_true, y_pred)
+    prec = precision_score(y_true, y_pred, average='macro', zero_division=0)
+    rec = recall_score(y_true, y_pred, average='macro', zero_division=0)
+    f1 = f1_score(y_true, y_pred, average='macro', zero_division=0)
 
     print(f"Accuracy:  {acc}")
     print(f"Precision: {prec}")
