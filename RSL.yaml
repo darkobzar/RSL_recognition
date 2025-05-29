@@ -1,0 +1,18 @@
+yolo:
+    test_txt_path: "C:/Users/ds_ko/Downloads/RSL_img/test.txt"
+    train_yaml: "C:/Users/ds_ko/Downloads/RSL_img/data/data_split.yaml"
+
+vit:
+    train_img: "C:/Users/ds_ko/Downloads/RSL_img/images"
+    train_vid: "C:/Users/ds_ko/Downloads/RSL_vid_v2/images/default"
+    train_img_anno: "C:/Users/ds_ko/Downloads/RSL_img/annotations/annotation.json"
+    train_vid_anno: "C:/Users/ds_ko/Downloads/RSL_vid_v2/annotations/annotation.json"
+    pr_model: "MCG-NJU/videomae-base"
+
+    val_vid: "C:/Users/ds_ko/Downloads/val/images/default"
+    val_vid_anno: "C:/Users/ds_ko/Downloads/val/annotations/annotations.json"
+    test_vid: "C:/Users/ds_ko/Downloads/test/images/default"
+    test_vid_anno: "C:/Users/ds_ko/Downloads/test/annotations/annotations.json"
+    log_dir: "runs/videomae_gesture"
+
+
